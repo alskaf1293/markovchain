@@ -4,6 +4,8 @@ import ArrowClass from "./classes/ArrowClass.js";
 import Node from "./classes/Node.jsx"
 import NodeClass from "./classes/NodeClass.js"
 
+import "./markov.css"
+
 export default class MarkovChain extends Component {
     constructor(props){
         super(props);
@@ -120,8 +122,12 @@ export default class MarkovChain extends Component {
                         }
                         if(!itemInSelectedArrows){
                             return(
-                                <button style={{position:"absolute", opacity: 0.5, background: "#B4EEB4", top: item.y+item.height/2, left: item.x, transform: `translate(${-50}%, ${100}%)`,}}
+                                <button style={{position:"absolute", color: "#073763", borderRadius: "50%",border: 0, opacity: 1, background: "#3d85c6", top: item.y+item.height/2, left: item.x, transform: `translate(${-50}%, ${100}%)`,}}
                                         onClick={() => this.addNodeToSelected(item)}>+</button>
+                            );
+                        }else{
+                            return(
+                                <React.Fragment></React.Fragment>
                             );
                         }
                     })}
@@ -133,7 +139,7 @@ export default class MarkovChain extends Component {
         if(this.state.selected !== null){
             return (
                 <React.Fragment>
-                    <button onClick={()=>{
+                    <button className="changeProbabilitesButton" onClick={()=>{
                         const {renderProbabilities} = this.state;
                         if(renderProbabilities){
                             let sum=0;
@@ -161,8 +167,8 @@ export default class MarkovChain extends Component {
                     item.arrows.map(elem => {
                         return(
                             <div style={{position: "absolute"}}>
-                                <svg style={{position: "absolute"}} width={5000} height={2500}>
-                                    <line x1={elem.node.x} y1={elem.node.y} x2={elem.pointer.x} y2={elem.pointer.y} stroke="black"/>
+                                <svg style={{position: "absolute"}} width={1500} height={1500}>
+                                    <line x1={elem.node.x} y1={elem.node.y} x2={elem.pointer.x} y2={elem.pointer.y} stroke="#073763ff"/>
                                 </svg>
                             </div>
                         );
@@ -189,7 +195,7 @@ export default class MarkovChain extends Component {
                                     background: "#000000",
                                 }}><input style={{
                                     width: 10,
-                                    height: 10,}} value={item.prob} onChange={(e) => this.handleProbChange(item,e)} /></div>
+                                    height: 10, color: "#073763ff"}} value={item.prob} onChange={(e) => this.handleProbChange(item,e)} /></div>
                                     );
                                 }
                             else{
@@ -252,7 +258,7 @@ export default class MarkovChain extends Component {
                 return (
                     <React.Fragment>
                         <div onClick={() => this.setSelectedNode(item)} style={{position: "absolute"}}>
-                            <h1 style={{position: "relative", top: item.y, left: item.x, transform: `translate(${-50}%, ${-50}%)`}}>{item.id}</h1>
+                            <h1 style={{color:"#073763ff",position: "relative", top: item.y, left: item.x, transform: `translate(${-50}%, ${-50}%)`}}>{item.id}</h1>
                             <Node key={item.id} position={"absolute"} x={item.x} y={item.y} width={item.width} height={item.height} bgc={item.bgc}/>
                             
                         </div>
@@ -263,23 +269,23 @@ export default class MarkovChain extends Component {
     }
     renderMarkovButton(){
         return(
-            <button onClick={() => this.setState({selectCurrent: true, renderProbabilities: false})}>Run Markov</button>
+            <button className="runMarkovButton" onClick={() => this.setState({selectCurrent: true, renderProbabilities: false})}>Run Markov</button>
         );
     }
 
     renderWalk(){
         if(this.state.walk !== null){
             return(
-                <React.Fragment>
-                    <h1 style={{position: "relative", left: 1000}}>Path</h1>
+                <div className="walkDiv">
+                    <h1 style={{position: "relative", color: "#073763ff"}}>Path</h1>
                     {this.state.walk.map(item => {
                         return(
                             <React.Fragment>
-                                <h2 style={{position: "relative", left: 1000}}>{item.id}</h2>
+                                <h2 style={{position: "relative", color: "#073763ff"}}>{item.id}</h2>
                             </React.Fragment>
                         );
                     })}
-                </React.Fragment>
+                </div>
             );
         }    
     }
@@ -288,32 +294,39 @@ export default class MarkovChain extends Component {
         if(this.state.walk !== null){
             return (
                 <React.Fragment>
-                    <button onClick={() => this.setState({walk: null})}>Again</button>
+                    <button className="againButton" onClick={() => this.setState({walk: null})}>Again</button>
                 </React.Fragment>
             );
         }
     }
     render(){
+
         return(
-            <div>
-                <input type="number" value={this.state.nodes} onChange={this.handleNodeChange} />
-                {this.renderChangeProbabilitiesButton()}
-                
-                {/*Lines*/}
-                {this.renderLines()}
+            <React.Fragment>
+                <div className="bodyStyle">
+                    
+                    {/*Lines*/}
+                    {this.renderLines()}
 
-                {/*Lines*/}
-                {this.renderNodes()}
-                {this.renderAddButtons()}
+                    {/*Lines*/}
+                    {this.renderNodes()}
+                    {this.renderAddButtons()}
 
-                {/*Probabilities*/}
-                {this.renderProbabilities()}
+                    {/*Probabilities*/}
+                    {this.renderProbabilities()}
 
+
+                    <div className="buttons">
+                        <input className="nodeInputBox" type="number" value={this.state.nodes} onChange={this.handleNodeChange} />
+                        {this.renderChangeProbabilitiesButton()}
+                        {this.renderMarkovButton()}
+                        {this.renderSetWalkToNull()}
+                    </div>
+
+                </div>
                 {/*Random Walk*/}
-                {this.renderMarkovButton()}
-                {this.renderSetWalkToNull()}
                 {this.renderWalk()}
-            </div>
+            </React.Fragment>
         );
         
     }

@@ -12,7 +12,8 @@ export default class Node extends Component{
             top: this.props.y,
             left: this.props.x,
             transform: `translate(${-50}%, ${-50}%)`,
-            opacity: 0.5
+            opacity: 0.5,
+            backgroundColor: "#073763ff",
         }
         return (
             <div style={circleStyle}></div>
